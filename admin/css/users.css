@@ -1,0 +1,52 @@
+/*Custom style for user table */
+.table-container {
+   overflow-x: auto;
+}
+table {
+   width: 100%;
+   border-collapse: collapse;
+}
+th, td {
+   padding: 15px;
+   border: 1px solid #464343;
+   /* border-bottom: 1px solid #ffffff; */
+   text-align: left;
+   font-size: 18px; /* Adjust text size */
+}
+th {
+   background-color: #4834d4;
+   color: #ffffff;
+}
+td {
+   background-color: #ffffff;
+}
+.pagination {
+   margin-top: 20px;
+}
+.pagination a {
+   display: inline-block;
+   padding: 8px 16px;
+   text-decoration: none;
+   color: black;
+   background-color: #ffffff;
+   border-radius: 5px;
+   margin-right: 5px;
+}
+.pagination a.active {
+   background-color: #4CAF50;
+   color: white;
+}
+.pagination a:hover:not(.active) {
+   background-color: #ddd;
+}
+/* Custom style for search box */
+.search-box {
+   margin-bottom: 20px;
+}
+#searchInput {
+   width: 300px; /* Adjust the width as needed */
+   padding: 10px;
+   font-size: 18px;
+   border-radius: 5px;
+   border: 1px solid #ccc;
+}
