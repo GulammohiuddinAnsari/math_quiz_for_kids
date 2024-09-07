@@ -1,0 +1,21 @@
+{
+    "name": "kaush/ty2",
+    "description": "php project",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Kaush\\Ty2\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kaushik Ahir"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "mongodb/mongodb": "^1.12",
+        "phpmailer/phpmailer": "^6.5"
+    }
+}
