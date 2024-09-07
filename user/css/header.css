@@ -1,0 +1,58 @@
+body,
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.logo {
+  max-width: 24px;
+  max-height: 24px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.heading {
+  text-align: center;
+  background-color: #333;
+  padding: 20px 0;
+}
+
+.heading a {
+  display: inline-flex;
+  text-decoration: none;
+  color: #fff;
+}
+
+.heading h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav {
+  background-color: #5356ff;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  margin: 0 20px;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.user-icon {
+  width: 15px;
+  height: auto;
+}
