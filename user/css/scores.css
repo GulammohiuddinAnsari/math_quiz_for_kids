@@ -1,0 +1,19 @@
+.container h2 {
+  text-align: center;
+}
+
+.container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.container th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.container th {
+  background-color: #f2f2f2;
+}
