@@ -14,14 +14,19 @@ if (isset($_SESSION["signedin"]) == true) {
         exit();
     }
 
+    $category = $_SESSION['category'];
+    $questions = $collection->find(['category' => $category])->toArray();
+
+    shuffle($questions);
+    $questions = array_slice($questions, 0, 5);
+
     if (!isset($_SESSION['current_question'])) {
         $_SESSION['current_question'] = 0;
         $_SESSION['score'] = 0;
         $_SESSION['answers'] = [];
+        $_SESSION['all_questions'] = serialize($questions); // Serialize questions array
     }
 
-    $category = $_SESSION['category'];
-    $questions = $collection->find(['category' => $category])->toArray();
     $totalQuestions = count($questions);
 
     if ($totalQuestions == 0) {
@@ -34,19 +39,20 @@ if (isset($_SESSION["signedin"]) == true) {
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['next'])) {
-            // Save answer and increment current question
-            $_SESSION['answers'][$_SESSION['current_question']] = $_POST['answer'];
+            if (isset($_POST['answer'])) {
+                $_SESSION['answers'][$_SESSION['current_question']] = $_POST['answer'];
+            }
             $_SESSION['current_question']++;
         } elseif (isset($_POST['prev'])) {
-            // Decrement current question
             $_SESSION['current_question']--;
         } elseif (isset($_POST['submit'])) {
-            // Save last answer
             $_SESSION['answers'][$_SESSION['current_question']] = $_POST['answer'];
 
             // Calculate score
+            $_SESSION['score'] = 0;
+            $questions = unserialize($_SESSION['all_questions']); // Unserialize questions array
             foreach ($_SESSION['answers'] as $index => $answer) {
-                if ($questions[$index]['answer'] == $answer) {
+                if ($questions[$index]->answer == $answer) { // Access object properties using -> notation
                     $_SESSION['score']++;
                 }
             }
@@ -60,9 +66,12 @@ if (isset($_SESSION["signedin"]) == true) {
 
             $scoreData = [
                 'email' => $_SESSION['email'],
+                'name' => $_SESSION["userName"],
                 'category' => $category,
                 'score' => $score,
-                'date' => $date
+                'date' => $date,
+                'answers' => $_SESSION['answers'],
+                'questions' => $questions // Store questions array
             ];
 
             $collection_score = $database->scores;
@@ -78,7 +87,9 @@ if (isset($_SESSION["signedin"]) == true) {
             header('Location: results_page.php');
         }
     }
-    $currentQuestion = $questions[$_SESSION['current_question']];
+    $questions = unserialize($_SESSION['all_questions']); // Unserialize questions array
+    $currentQuestion = $questions[$_SESSION['current_question']]; // Access object by index
+
 ?>
 
     <html>
@@ -86,16 +97,6 @@ if (isset($_SESSION["signedin"]) == true) {
     <head>
         <title>Quiz Page</title>
         <link rel="stylesheet" href="css/quiz_page.css">
-        <script>
-            function highlightOption(option) {
-                var options = document.querySelectorAll('.options label');
-                options.forEach(function(opt) {
-                    opt.style.backgroundColor = '#f9f9f9';
-                });
-
-                option.parentElement.style.backgroundColor = 'lightgreen';
-            }
-        </script>
     </head>
 
     <body>
@@ -104,11 +105,11 @@ if (isset($_SESSION["signedin"]) == true) {
             <h1>Quiz: <?php echo ucfirst($category); ?> Category</h1>
             <form action="" method="post">
                 <div class="question">
-                    <h2><?php echo $currentQuestion['question']; ?></h2>
+                    <h2><?php echo $currentQuestion->question; ?></h2> <!-- Access object properties using -> notation -->
                     <div class="options">
-                        <?php foreach ($currentQuestion['options'] as $key => $value) : ?>
+                        <?php foreach ($currentQuestion->options as $key => $value) : ?> <!-- Access object properties using -> notation -->
                             <label>
-                                <input required type="radio" name="answer" value="<?php echo $key; ?>" onclick="highlightOption(this);" <?php echo (isset($_SESSION['answers'][$_SESSION['current_question']]) && $_SESSION['answers'][$_SESSION['current_question']] == $key) ? 'checked' : ''; ?>>
+                                <input type="radio" name="answer" value="<?php echo $key; ?>" onclick="highlightOption(this);" <?php echo (isset($_SESSION['answers'][$_SESSION['current_question']]) && $_SESSION['answers'][$_SESSION['current_question']] == $key) ? 'checked' : ''; ?>>
                                 <?php echo $key . '. ' . $value; ?>
                             </label>
                         <?php endforeach; ?>
@@ -124,6 +125,25 @@ if (isset($_SESSION["signedin"]) == true) {
                 <?php endif; ?>
             </form>
         </div>
+        <script>
+            window.onload = function() {
+                var selectedOption = "<?php echo isset($_SESSION['answers'][$_SESSION['current_question']]) ? $_SESSION['answers'][$_SESSION['current_question']] : ''; ?>";
+                if (selectedOption !== '') {
+                    var optionToHighlight = document.querySelector('input[value="' + selectedOption + '"]');
+                    highlightOption(optionToHighlight);
+                }
+            };
+
+            function highlightOption(option) {
+                var options = document.querySelectorAll('.options label');
+                options.forEach(function(opt) {
+                    opt.style.backgroundColor = '#f9f9f9';
+                });
+
+                option.parentElement.style.backgroundColor = 'lightgreen';
+            }
+        </script>
+        <?php include('footer.php'); ?>
     </body>
 
     </html>
