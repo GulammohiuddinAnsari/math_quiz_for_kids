@@ -1,16 +1,16 @@
 {
-    "name": "kaush/ty2",
+    "name": "aftab/ty-2",
     "description": "php project",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Kaush\\Ty2\\": "src/"
+            "aftab\\Ty-2\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "Kaushik Ahir"
+            "name": "Gulam Mohiuddin"
         }
     ],
     "minimum-stability": "stable",
